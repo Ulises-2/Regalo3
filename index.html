@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Valentín Especial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            touch-action: pan-y;
+            background: #000;
+        }
+
+        /* Sistema de slides */
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Colores progresivos */
+        #slide1 { background: linear-gradient(135deg, #ffb6c1 0%, #ffccd5 100%); }
+        #slide2 { background: linear-gradient(135deg, #ff6b8b 0%, #ff8fa3 100%); }
+        #slide3 { background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%); }
+        #slide4 { background: #000000; }
+        #slide5 { background: #000000; }
+
+        /* Contenido principal */
+        .content {
+            max-width: 85%;
+            z-index: 10;
+            position: relative;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 40px 30px;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: fadeIn 1.2s ease-out;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #555;
+            animation: fadeIn 1.5s ease-out;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #666;
+            animation: fadeIn 1.7s ease-out;
+            font-weight: 500;
+        }
+
+        .message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: #444;
+            animation: fadeIn 2s ease-out;
+            font-weight: 400;
+            min-height: 120px;
+        }
+
+        /* Regalo que cubre toda la pantalla */
+        .gift-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e91e63 0%, #ff4081 100%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .gift-box-large {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #c2185b 0%, #ad1457 100%);
+            border-radius: 20px;
+            position: relative;
+            animation: floatGift 3s ease-in-out infinite;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            transition: transform 0.3s;
+        }
+
+        .gift-box-large:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-box-large::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            background: #880e4f;
+            top: -20px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .gift-lid-large {
+            width: 320px;
+            height: 50px;
+            background: #6a1b9a;
+            position: absolute;
+            top: -70px;
+            left: -10px;
+            border-radius: 15px;
+            animation: lidFloat 3s ease-in-out infinite;
+        }
+
+        .gift-bow-large {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: #ff80ab;
+            border-radius: 50%;
+        }
+
+        .gift-bow-large::before,
+        .gift-bow-large::after {
+            content: '';
+            position: absolute;
+            width: 140px;
+            height: 40px;
+            background: #ff80ab;
+            border-radius: 50%;
+            top: 20px;
+        }
+
+        .gift-bow-large::before {
+            left: -100px;
+            transform: rotate(-45deg);
+        }
+
+        .gift-bow-large::after {
+            right: -100px;
+            transform: rotate(45deg);
+        }
+
+        .gift-ribbon {
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            background: #ff80ab;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .gift-ribbon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: #ff80ab;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .click-counter {
+            margin-top: 40px;
+            font-size: 1.5rem;
+            color: white;
+            background: rgba(0,0,0,0.6);
+            padding: 15px 30px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .click-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            margin: 0 5px;
+        }
+
+        /* Lluvia de corazones (en todas las slides) */
+        .hearts-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff6b8b;
+            font-size: 24px;
+            animation: fall linear infinite;
+            opacity: 0.7;
+            text-shadow: 0 0 10px rgba(255,107,139,0.5);
+        }
+
+        /* Explosión de confeti */
+        .explosion {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            border-radius: 2px;
+            animation: explode 1.5s ease-out forwards;
+        }
+
+        /* Pantalla negra con cascada de texto */
+        .cascade-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .cascade-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #ff6b8b;
+            opacity: 0;
+            position: absolute;
+            text-shadow: 0 0 25px rgba(255,107,139,0.8);
+            animation: cascadeFall 2s ease-in-out forwards;
+        }
+
+        /* Animación de corazón (solo contorno) */
+        .heart-drawing-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 11;
+        }
+
+        #heartCanvas {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .heart-final-text {
+            position: absolute;
+            bottom: 20%;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff6b8b;
+            opacity: 0;
+            animation: fadeInText 1s ease-out 3s forwards;
+            text-shadow: 0 0 15px rgba(255,107,139,0.7);
+        }
+
+        /* Navegación */
+        .nav-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .dot.active {
+            background: #ff6b8b;
+            border-color: white;
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(255,107,139,0.7);
+        }
+
+        /* Instrucciones */
+        .instructions {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            color: white;
+            animation: pulse 3s infinite;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes floatGift {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-20px); 
+            }
+        }
+
+        @keyframes lidFloat {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-15px); 
+            }
+        }
+
+        @keyframes fall {
+            0% { 
+                transform: translateY(-100px) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 0.8; 
+            }
+            90% { 
+                opacity: 0.8; 
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes explode {
+            0% { 
+                transform: translate(0, 0) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translate(var(--tx), var(--ty)) scale(0); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes cascadeFall {
+            0% { 
+                transform: translateY(-100px); 
+                opacity: 0; 
+            }
+            20% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+            80% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+            100% { 
+                transform: translateY(100px); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes fadeInText {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 0.7; 
+            }
+            50% { 
+                opacity: 1; 
+            }
+        }
+
+        /* Ocultar elementos inicialmente */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla inicial del regalo (FULLSCREEN) -->
+    <div class="gift-fullscreen" id="giftScreen">
+        <div class="gift-box-large" id="giftBox">
+            <div class="gift-lid-large"></div>
+            <div class="gift-bow-large"></div>
+            <div class="gift-ribbon"></div>
+        </div>
+        <div class="click-counter" id="clickCounter">
+            Toca el regalo <span class="click-number">5</span> veces para abrirlo
+        </div>
+    </div>
+
+    <!-- Contenedor principal de slides -->
+    <div class="container hidden" id="mainContainer">
+        <!-- Lluvia de corazones en todas las slides -->
+        <div class="hearts-rain" id="heartsRain"></div>
+
+        <!-- Slide 1: Portada -->
+        <div class="slide" id="slide1">
+            <div class="content">
+                <h1>Feliz San Valentín</h1>
+                <h2>Feliz 14 de Febrero</h2>
+                <h3>Feliz día de la Amistad</h3>
+            </div>
+            <div class="instructions">← Desliza para continuar →</div>
+        </div>
+
+        <!-- Slide 2: Mensaje fijo (EDITAR EN CÓDIGO) -->
+        <div class="slide" id="slide2">
+            <div class="content">
+                <h1>Para una Amiga Especial</h1>
+                <p class="message">
+                    <!-- EDITAR ESTE TEXTO DIRECTAMENTE EN EL CÓDIGO -->
+                    Este regalo es por el dia de la amistad y lo hize para ti angela.
+Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres mi mejor amiga y la mejor q he conocido. Van 3 años de amistad y este año ya vamos por los 4, han sido muchos momento los cuales hemos pasado y he valorado cada uno de ellos. Eres una persona muy especila para mi, haz estado conmigo en las buenas y en las malas, en varios momentos, cuando ando decaido, cuando ando del mejor humor y lo agradezco, yo soy tu mejor amigo y estoy feliz de ser lo, aunque aveces siento q no siempre estoy para ti, q aveces no te apoyo lo suficiente, q aveces no soy tan buen amigo como quisiera serlo para ti intento poder ser un gran amigo porq no me gusta q si te sientes mal o pasas por algo lo sufras sola, si tu me apoyas yo lo hare, muchas gracias por tu amistad y espero que seamos amigos hasta q estemos arrugaditos como pasas❤️💖🫶. PD: Si lees esto me debes unas fotos de recurdo cuando nos veamos.
+                </p>
+            </div>
+            <div class="instructions">← Desliza para continuar →</div>
+        </div>
+
+        <!-- Slide 3: Frase a distancia -->
+        <div class="slide" id="slide3">
+            <div class="content">
+                <h1>Desde la Distancia</h1>
+                <p class="message">
+                    No es mucho pero es todo lo que puedo darte a distancia,<br>
+                    espero lo disfrutes.
+                </p>
+            </div>
+            <div class="instructions">← Desliza para continuar →</div>
+        </div>
+
+        <!-- Slide 4: Pantalla negra con cascada de FRASES -->
+        <div class="slide" id="slide4">
+            <div class="cascade-container" id="cascadeContainer"></div>
+            <div class="instructions hidden">Preparando algo especial...</div>
+        </div>
+
+        <!-- Slide 5: Corazón de CONTORNO dibujándose -->
+        <div class="slide" id="slide5">
+            <div class="heart-drawing-container">
+                <canvas id="heartCanvas"></canvas>
+                <div class="heart-final-text" id="heartText"></div>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="nav-dots">
+            <div class="dot active" data-slide="0"></div>
+            <div class="dot" data-slide="1"></div>
+            <div class="dot" data-slide="2"></div>
+            <div class="dot" data-slide="3"></div>
+            <div class="dot" data-slide="4"></div>
+        </div>
+    </div>
+
+    <!-- Explosión de confeti -->
+    <div class="explosion hidden" id="explosionContainer"></div>
+
+    <script>
+        // ========== VARIABLES GLOBALES ==========
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let clickCount = 0;
+        let explosionCreated = false;
+        let heartsInterval;
+        let cascadeActive = false;
+        let heartAnimationActive = false;
+        let canvas, ctx;
+
+        // ========== FUNCIONES DE CORAZONES ==========
+        function createHeartsRain() {
+            clearInterval(heartsInterval);
+            
+            heartsInterval = setInterval(() => {
+                const heartsRain = document.getElementById('heartsRain');
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                
+                // Posición aleatoria
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (15 + Math.random() * 25) + 'px';
+                heart.style.animationDuration = (3 + Math.random() * 7) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.opacity = 0.4 + Math.random() * 0.4;
+                
+                // Color aleatorio
+                const colors = ['#ff6b8b', '#ff4081', '#e91e63', '#c2185b'];
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                heartsRain.appendChild(heart);
+                
+                // Eliminar después de la animación
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, 10000);
+            }, 200);
+        }
+
+        // ========== REGALO FULLSCREEN Y EXPLOSIÓN ==========
+        function setupGiftInteraction() {
+            const giftBox = document.getElementById('giftBox');
+            const clickCounter = document.getElementById('clickCounter');
+            
+            giftBox.addEventListener('click', () => {
+                clickCount++;
+                
+                // Actualizar contador visual
+                const clickNumber = clickCounter.querySelector('.click-number');
+                clickNumber.textContent = (5 - clickCount);
+                
+                // Efecto visual del click
+                giftBox.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    giftBox.style.transform = 'scale(1)';
+                }, 150);
+                
+                if (clickCount >= 5 && !explosionCreated) {
+                    createExplosion();
+                    explosionCreated = true;
+                    
+                    // Ocultar regalo y mostrar app después de 2 segundos
+                    setTimeout(() => {
+                        document.getElementById('giftScreen').classList.add('hidden');
+                        document.getElementById('mainContainer').classList.remove('hidden');
+                        createHeartsRain(); // Iniciar lluvia de corazones
+                    }, 2000);
+                }
+            });
+        }
+
+        function createExplosion() {
+            const explosionContainer = document.getElementById('explosionContainer');
+            explosionContainer.classList.remove('hidden');
+            
+            // Crear 200 piezas de confeti
+            for (let i = 0; i < 200; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                
+                // Colores aleatorios
+                const colors = ['#ff6b6b', '#4fc3f7', '#ffd700', '#9575cd', '#81c784', '#ff4081'];
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Posición inicial en el centro
+                confetti.style.left = '50%';
+                confetti.style.top = '50%';
+                
+                // Dirección aleatoria
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 300 + Math.random() * 400;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                confetti.style.setProperty('--tx', `${tx}px`);
+                confetti.style.setProperty('--ty', `${ty}px`);
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                explosionContainer.appendChild(confetti);
+                
+                // Eliminar después de la animación
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, 2000);
+            }
+            
+            // Ocultar explosión después de 2 segundos
+            setTimeout(() => {
+                explosionContainer.classList.add('hidden');
+            }, 2000);
+        }
+
+        // ========== NAVEGACIÓN ==========
+        function goToSlide(n) {
+            if (n < 0) n = 0;
+            if (n >= slides.length) n = slides.length - 1;
+            
+            // Ocultar slide actual
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            // Mostrar nueva slide
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+            
+            // Efectos especiales según la slide
+            handleSpecialEffects();
+        }
+
+        function nextSlide() {
+            const next = currentSlide < slides.length - 1 ? currentSlide + 1 : 0;
+            goToSlide(next);
+        }
+
+        function prevSlide() {
+            const prev = currentSlide > 0 ? currentSlide - 1 : slides.length - 1;
+            goToSlide(prev);
+        }
+
+        // ========== EFECTOS ESPECIALES POR SLIDE ==========
+        function handleSpecialEffects() {
+            // Slide 4: Cascada de TEXTO (no corazones)
+            if (currentSlide === 3 && !cascadeActive) {
+                startCascadeAnimation();
+                cascadeActive = true;
+            }
+            
+            // Slide 5: Corazón de CONTORNO
+            if (currentSlide === 4 && !heartAnimationActive) {
+                startHeartAnimation();
+                heartAnimationActive = true;
+            }
+        }
+
+        function startCascadeAnimation() {
+            const cascadeContainer = document.getElementById('cascadeContainer');
+            cascadeContainer.innerHTML = '';
+            
+            const frases = [
+                "Te quiero Mucho",
+                "Feliz San Valentín",
+                "Gracias por tu amistad y por todos los momentos bellos"
+            ];
+            
+            // Mostrar frases en cascada (NO corazones)
+            frases.forEach((frase, index) => {
+                setTimeout(() => {
+                    const textElement = document.createElement('div');
+                    textElement.className = 'cascade-text';
+                    textElement.textContent = frase;
+                    textElement.style.animationDelay = (index * 2) + 's';
+                    cascadeContainer.appendChild(textElement);
+                    
+                    // Eliminar después de la animación
+                    setTimeout(() => {
+                        if (textElement.parentNode) {
+                            textElement.parentNode.removeChild(textElement);
+                        }
+                    }, 4000);
+                }, index * 2000);
+            });
+            
+            // Después de 6 segundos, ir a la siguiente slide automáticamente
+            setTimeout(() => {
+                nextSlide();
+            }, 6000);
+        }
+
+        function startHeartAnimation() {
+            // Configurar canvas
+            canvas = document.getElementById('heartCanvas');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx = canvas.getContext('2d');
+            
+            // Centrar el corazón
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const size = Math.min(canvas.width, canvas.height) * 0.4;
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar corazón SOLO CONTORNO
+            drawHeartOutline(centerX, centerY, size);
+            
+            // Mostrar texto después de 3 segundos
+            setTimeout(() => {
+                document.getElementById('heartText').textContent = "Gracias por tu amistad y por todos los momentos bellos";
+            }, 3000);
+            
+            // Reiniciar después de 8 segundos
+            setTimeout(() => {
+                heartAnimationActive = false;
+                if (currentSlide === 4) {
+                    startHeartAnimation(); // Reiniciar animación
+                }
+            }, 8000);
+        }
+
+        function drawHeartOutline(x, y, size) {
+            // Configurar solo para contorno
+            ctx.strokeStyle = '#ff6b8b';
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.shadowColor = 'rgba(255, 107, 139, 0.7)';
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = 'transparent'; // Sin relleno
+            
+            // Path del corazón (solo contorno)
+            ctx.beginPath();
+            
+            // Puntos del corazón
+            const points = [];
+            
+            // Crear puntos para un corazón (fórmula paramétrica)
+            for (let i = 0; i <= Math.PI * 2; i += 0.02) {
+                const t = i;
+                // Fórmula paramétrica para corazón
+                const px = 16 * Math.pow(Math.sin(t), 3);
+                const py = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+                
+                points.push({
+                    x: x + (px * size) / 16,
+                    y: y - (py * size) / 16
+                });
+            }
+            
+            // Animar dibujo del contorno
+            let currentPoint = 0;
+            const totalPoints = points.length;
+            
+            function animateDrawing() {
+                if (currentPoint >= totalPoints) {
+                    ctx.closePath();
+                    ctx.stroke(); // Solo trazo, sin fill
+                    return;
+                }
+                
+                const point = points[currentPoint];
+                
+                if (currentPoint === 0) {
+                    ctx.moveTo(point.x, point.y);
+                } else {
+                    ctx.lineTo(point.x, point.y);
+                }
+                
+                ctx.stroke();
+                currentPoint++;
+                
+                requestAnimationFrame(animateDrawing);
+            }
+            
+            animateDrawing();
+        }
+
+        // ========== NAVEGACIÓN POR DESLIZAMIENTO ==========
+        let startX = 0;
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        });
+
+        // Navegación por teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Navegación por dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                goToSlide(index);
+            });
+        });
+
+        // ========== INICIALIZACIÓN ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            setupGiftInteraction();
+            console.log('App de San Valentín cargada correctamente');
+        });
+
+        // Redimensionar canvas cuando cambia el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            if (canvas) {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                if (currentSlide === 4 && heartAnimationActive) {
+                    startHeartAnimation();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
