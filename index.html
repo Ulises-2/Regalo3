@@ -236,13 +236,36 @@
             z-index: 1;
         }
 
-        .heart {
+        /* CORAZONES DIBUJADOS CON CSS (sin emojis) */
+        .heart-shape {
             position: absolute;
-            color: #ff6b8b;
-            font-size: 24px;
+            width: 30px;
+            height: 30px;
             animation: fall linear infinite;
             opacity: 0.7;
-            text-shadow: 0 0 10px rgba(255,107,139,0.5);
+            filter: drop-shadow(0 0 8px rgba(255,107,139,0.5));
+        }
+
+        .heart-shape:before,
+        .heart-shape:after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 24px;
+            background: #ff6b8b;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .heart-shape:before {
+            left: 15px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart-shape:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
         }
 
         .explosion {
@@ -545,17 +568,22 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
             heartsInterval = setInterval(() => {
                 const heartsRain = document.getElementById('heartsRain');
                 const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.innerHTML = '❤️';
+                heart.className = 'heart-shape';
                 
                 heart.style.left = Math.random() * 100 + '%';
-                heart.style.fontSize = (15 + Math.random() * 25) + 'px';
+                heart.style.width = (20 + Math.random() * 30) + 'px';
+                heart.style.height = (20 + Math.random() * 30) + 'px';
                 heart.style.animationDuration = (3 + Math.random() * 7) + 's';
                 heart.style.animationDelay = Math.random() * 5 + 's';
                 heart.style.opacity = 0.4 + Math.random() * 0.4;
                 
-                const colors = ['#ff6b8b', '#ff4081', '#e91e63', '#c2185b'];
-                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                const colors = ['#ff6b8b', '#ff4081', '#e91e63', '#c2185b', '#ff1493', '#ff69b4'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                heart.style.setProperty('--heart-color', color);
+                heart.querySelectorAll(':before, :after').forEach(pseudo => {
+                    pseudo.style.background = color;
+                });
                 
                 heartsRain.appendChild(heart);
                 
