@@ -42,14 +42,18 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.8s ease-in-out;
+            z-index: 2; /* AÑADIDO: z-index para slides */
         }
 
         .slide.active {
             opacity: 1;
             pointer-events: all;
+            z-index: 3; /* AÑADIDO: slide activa sobre otras */
         }
 
-        #slide1 { background: linear-gradient(135deg, #ffb6c1 0%, #ffccd5 100%); }
+        #slide1 { 
+            background: linear-gradient(135deg, #ffb6c1 0%, #ffccd5 100%);
+        }
         #slide2 { background: linear-gradient(135deg, #ff6b8b 0%, #ff8fa3 100%); }
         #slide3 { background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%); }
         #slide4 { background: #000000; }
@@ -57,20 +61,22 @@
 
         .content {
             max-width: 85%;
-            z-index: 10;
             position: relative;
             background: rgba(255, 255, 255, 0.92);
-            padding: 40px 30px;
+            padding: 30px 25px;
             border-radius: 25px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255,255,255,0.4);
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 10; /* AÑADIDO: contenido sobre corazones */
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
             color: #d32f2f;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             animation: fadeIn 1.2s ease-out;
@@ -79,8 +85,8 @@
 
         h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
             color: #555;
             animation: fadeIn 1.5s ease-out;
             font-weight: 600;
@@ -88,20 +94,36 @@
 
         h3 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #666;
             animation: fadeIn 1.7s ease-out;
             font-weight: 500;
+            margin-bottom: 20px;
         }
 
         .message {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.5rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.6;
             color: #444;
             animation: fadeIn 2s ease-out;
             font-weight: 400;
-            min-height: 120px;
+            text-align: left;
+            padding: 0 5px;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 139, 0.6);
+            border-radius: 10px;
         }
 
         .gift-fullscreen {
@@ -226,6 +248,7 @@
             margin: 0 5px;
         }
 
+        /* MODIFICADO: Lluvia de corazones CON z-index más bajo */
         .hearts-rain {
             position: absolute;
             top: 0;
@@ -233,10 +256,9 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 1; /* AÑADIDO: Debajo de las slides */
         }
 
-        /* CORAZONES DIBUJADOS CON CSS (sin emojis) */
         .heart-shape {
             position: absolute;
             width: 30px;
@@ -244,6 +266,7 @@
             animation: fall linear infinite;
             opacity: 0.7;
             filter: drop-shadow(0 0 8px rgba(255,107,139,0.5));
+            z-index: 1; /* AÑADIDO: Coherente con contenedor */
         }
 
         .heart-shape:before,
@@ -297,7 +320,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 5; /* AÑADIDO: Para slide 4 */
         }
 
         .cascade-text {
@@ -308,6 +331,7 @@
             position: absolute;
             text-shadow: 0 0 25px rgba(255,107,139,0.8);
             animation: cascadeFall 2s ease-in-out forwards;
+            z-index: 6;
         }
 
         .heart-drawing-container {
@@ -319,12 +343,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 11;
+            z-index: 5; /* AÑADIDO: Para slide 5 */
         }
 
         #heartCanvas {
             max-width: 80%;
             max-height: 80%;
+            z-index: 6;
         }
 
         .heart-final-text {
@@ -336,6 +361,7 @@
             opacity: 0;
             animation: fadeInText 1s ease-out 3s forwards;
             text-shadow: 0 0 15px rgba(255,107,139,0.7);
+            z-index: 6;
         }
 
         .nav-dots {
@@ -345,7 +371,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 15px;
-            z-index: 20;
+            z-index: 20; /* AÑADIDO: Siempre visible */
         }
 
         .dot {
@@ -356,6 +382,7 @@
             transition: all 0.3s;
             cursor: pointer;
             border: 2px solid rgba(255,255,255,0.5);
+            z-index: 21;
         }
 
         .dot.active {
@@ -379,6 +406,7 @@
             border-radius: 25px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
+            z-index: 20; /* AÑADIDO: Siempre visible */
         }
 
         @keyframes fadeIn {
@@ -495,9 +523,9 @@
     </div>
 
     <div class="container hidden" id="mainContainer">
-        <div class="hearts-rain" id="heartsRain"></div>
-
-        <div class="slide" id="slide1">
+        <!-- MODIFICADO: Ahora cada slide tiene sus propios corazones -->
+        <div class="slide active" id="slide1">
+            <div class="hearts-rain" id="heartsRain1"></div>
             <div class="content">
                 <h1>Feliz San Valentín</h1>
                 <h2>Feliz 14 de Febrero</h2>
@@ -507,17 +535,19 @@
         </div>
 
         <div class="slide" id="slide2">
+            <div class="hearts-rain" id="heartsRain2"></div>
             <div class="content">
                 <h1>Para una Amiga Especial</h1>
                 <p class="message">
                     Este regalo es por el dia de la amistad y lo hize para ti angela.
-Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres mi mejor amiga y la mejor q he conocido. Van 3 años de amistad y este año ya vamos por los 4, han sido muchos momento los cuales hemos pasado y he valorado cada uno de ellos. Eres una persona muy especila para mi, haz estado conmigo en las buenas y en las malas, en varios momentos, cuando ando decaido, cuando ando del mejor humor y lo agradezco, yo soy tu mejor amigo y estoy feliz de ser lo, aunque aveces siento q no siempre estoy para ti, q aveces no te apoyo lo suficiente, q aveces no soy tan buen amigo como quisiera serlo para ti intento poder ser un gran amigo porq no me gusta q si te sientes mal o pasas por algo lo sufras sola, si tu me apoyas yo lo hare, muchas gracias por tu amistad y espero que seamos amigos hasta q estemos arrugaditos como pasas❤️💖🫶. PD: Si lees esto me debes unas fotos de recurdo cuando nos veamos.
+Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres mi mejor amiga y la mejor q he conocido. Van 3 años de amistad y este año ya vamos por los 4, han sido muchos momento los cuales hemos pasado y he valorado cada uno de ellos. Eres una persona muy especila para mi, haz estado conmigo en las buenas y en las malas, en varios momentos, cuando ando decaido, cuando ando del mejor humor y lo agradezco, yo soy tu mejor amigo y estoy feliz de ser lo, aunque aveces siento q no siempre estoy para ti, q aveces no te apoyo lo suficiente, q aveces no soy tan buen amigo como quisiera serlo para ti intento poder ser un gran amigo porq no me gusta q si te sientes mal o pasas por algo lo sufras sola, si tu me apoyas yo lo hare, muchas gracias por tu amistad y espero que seamos amigos hasta q estemos arrugaditos como pasas❤️💖🫶. PD: Si lees esto me debes unas fotos de recuerdo y un abrazo de media hora cuando nos veamos.
                 </p>
             </div>
             <div class="instructions">← Desliza para continuar →</div>
         </div>
 
         <div class="slide" id="slide3">
+            <div class="hearts-rain" id="heartsRain3"></div>
             <div class="content">
                 <h1>Desde la Distancia</h1>
                 <p class="message">
@@ -529,11 +559,13 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
         </div>
 
         <div class="slide" id="slide4">
+            <div class="hearts-rain" id="heartsRain4"></div>
             <div class="cascade-container" id="cascadeContainer"></div>
             <div class="instructions hidden">Preparando algo especial...</div>
         </div>
 
         <div class="slide" id="slide5">
+            <div class="hearts-rain" id="heartsRain5"></div>
             <div class="heart-drawing-container">
                 <canvas id="heartCanvas"></canvas>
                 <div class="heart-final-text" id="heartText"></div>
@@ -557,16 +589,17 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
         const dots = document.querySelectorAll('.dot');
         let clickCount = 0;
         let explosionCreated = false;
-        let heartsInterval;
+        let heartsIntervals = [];
         let cascadeActive = false;
         let heartAnimationActive = false;
         let canvas, ctx;
 
-        function createHeartsRain() {
-            clearInterval(heartsInterval);
-            
-            heartsInterval = setInterval(() => {
-                const heartsRain = document.getElementById('heartsRain');
+        // MODIFICADO: Función para crear corazones en un contenedor específico
+        function createHeartsForContainer(containerId) {
+            const intervalId = setInterval(() => {
+                const heartsRain = document.getElementById(containerId);
+                if (!heartsRain) return;
+                
                 const heart = document.createElement('div');
                 heart.className = 'heart-shape';
                 
@@ -581,9 +614,6 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 
                 heart.style.setProperty('--heart-color', color);
-                heart.querySelectorAll(':before, :after').forEach(pseudo => {
-                    pseudo.style.background = color;
-                });
                 
                 heartsRain.appendChild(heart);
                 
@@ -593,6 +623,29 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
                     }
                 }, 10000);
             }, 200);
+            
+            return intervalId;
+        }
+
+        // MODIFICADO: Iniciar corazones solo para la slide activa
+        function startHeartsForSlide(slideIndex) {
+            // Detener todos los intervalos anteriores
+            heartsIntervals.forEach(interval => clearInterval(interval));
+            heartsIntervals = [];
+            
+            // Limpiar todos los contenedores de corazones
+            for (let i = 1; i <= 5; i++) {
+                const container = document.getElementById(`heartsRain${i}`);
+                if (container) {
+                    container.innerHTML = '';
+                }
+            }
+            
+            // Iniciar corazones solo para la slide actual
+            if (slideIndex < 3) { // Solo para slides 1, 2 y 3
+                const intervalId = createHeartsForContainer(`heartsRain${slideIndex + 1}`);
+                heartsIntervals.push(intervalId);
+            }
         }
 
         function setupGiftInteraction() {
@@ -617,7 +670,7 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
                     setTimeout(() => {
                         document.getElementById('giftScreen').classList.add('hidden');
                         document.getElementById('mainContainer').classList.remove('hidden');
-                        createHeartsRain();
+                        startHeartsForSlide(0); // Iniciar corazones para slide 1
                     }, 2000);
                 }
             });
@@ -664,13 +717,19 @@ Muchas gracias por tu amistad, ya te lo he dicho antes y lo vuelvo a decir, eres
             if (n < 0) n = 0;
             if (n >= slides.length) n = slides.length - 1;
             
+            // Ocultar slide actual
             slides[currentSlide].classList.remove('active');
             dots[currentSlide].classList.remove('active');
             
+            // Mostrar nueva slide
             currentSlide = n;
             slides[currentSlide].classList.add('active');
             dots[currentSlide].classList.add('active');
             
+            // Iniciar corazones para la nueva slide
+            startHeartsForSlide(currentSlide);
+            
+            // Efectos especiales según la slide
             handleSpecialEffects();
         }
 
